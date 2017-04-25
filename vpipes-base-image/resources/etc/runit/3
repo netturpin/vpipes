@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo "Waiting for services to stop..."
+sv -v -w 60 stop ${SVDIR}/*

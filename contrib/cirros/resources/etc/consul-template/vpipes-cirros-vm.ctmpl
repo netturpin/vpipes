@@ -1,0 +1,48 @@
+#!/bin/bash
+
+function new_mac() {
+  echo "52:54:00:$(dd if=/dev/urandom bs=512 count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\).*$/\1:\2:\3/')"
+}
+
+exec /usr/bin/kvm \
+  -cpu host \
+  -nographic \
+  -serial mon:telnet::23,server,nowait \
+  -name $(hostname) \
+  -machine pc-i440fx-trusty,accel=kvm,usb=off \
+  -m 512M \
+  -realtime mlock=off \
+  -smp 1,sockets=1,cores=1,threads=1 \
+  -smbios type=0,vendor=Wistar \
+  -smbios type=1,manufacturer=Wistar,product=Wistar-vqfx1-VM,version=2.0 \
+  -no-user-config \
+  -nodefaults \
+  -rtc base=utc \
+  -boot strict=on \
+  -drive file=/var/lib/qcow2/cirros.img \
+  -device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 \
+  -msg timestamp=on \
+  -netdev bridge,id=br-eth0,br=br-eth0 \
+  -device e1000,netdev=br-eth0,mac=$(new_mac),bus=pci.0,addr=0x3 \
+  -netdev bridge,id=br-eth1,br=br-eth1 \
+  -device e1000,netdev=br-eth1,mac=$(new_mac),bus=pci.0,addr=0x4 \
+  -netdev bridge,id=br-eth2,br=br-eth2 \
+  -device e1000,netdev=br-eth2,mac=$(new_mac),bus=pci.0,addr=0x5 \
+  -netdev bridge,id=br-eth3,br=br-eth3 \
+  -device e1000,netdev=br-eth3,mac=$(new_mac),bus=pci.0,addr=0x6 \
+  -netdev bridge,id=br-eth4,br=br-eth4 \
+  -device e1000,netdev=br-eth4,mac=$(new_mac),bus=pci.0,addr=0x7 \
+  -netdev bridge,id=br-eth5,br=br-eth5 \
+  -device e1000,netdev=br-eth5,mac=$(new_mac),bus=pci.0,addr=0x8 \
+  -netdev bridge,id=br-eth6,br=br-eth6 \
+  -device e1000,netdev=br-eth6,mac=$(new_mac),bus=pci.0,addr=0x9 \
+  -netdev bridge,id=br-eth7,br=br-eth7 \
+  -device e1000,netdev=br-eth7,mac=$(new_mac),bus=pci.0,addr=0x10 \
+  -netdev bridge,id=br-eth8,br=br-eth8 \
+  -device e1000,netdev=br-eth8,mac=$(new_mac),bus=pci.0,addr=0x11 \
+  -netdev bridge,id=br-eth9,br=br-eth9 \
+  -device e1000,netdev=br-eth9,mac=$(new_mac),bus=pci.0,addr=0x12 \
+  -netdev bridge,id=br-eth10,br=br-eth10 \
+  -device e1000,netdev=br-eth10,mac=$(new_mac),bus=pci.0,addr=0x13 \
+  -netdev bridge,id=br-eth11,br=br-eth11 \
+  -device e1000,netdev=br-eth11,mac=$(new_mac),bus=pci.0,addr=0x14

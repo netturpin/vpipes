@@ -1,0 +1,16 @@
+{
+  "service": {
+    "name": "ssh",
+    "port": 22,
+    "enableTagOverride": false,
+    "checks": [
+      {
+        "id": "ssh",
+        "name": "SSH TCP VM port 22",
+        "tcp": "localhost:22",
+        "interval": "10s",
+        "timeout": "1s"
+      }
+    ]
+  }
+}

@@ -1,0 +1,67 @@
+#!/usr/bin/python
+
+import json
+import sys
+
+providers =  """# Configure the Docker provider
+provider "docker" {
+    host = "unix:///var/run/docker.sock"
+}
+
+# Configure the Consul provider
+provider "consul" {
+    address = "127.0.0.1:8500"
+    datacenter = "vpipes"
+}
+"""
+
+kv_header = """resource "consul_keys" "cables" {"""
+
+kv_footer = """}"""
+
+kv_key_header = """    key {"""
+
+kv_key_footer = """    }"""
+
+containers = """
+resource "docker_container" "ubuntu" {
+  name = "foo"
+  image = "${docker_image.ubuntu.latest}"
+}
+"""
+
+# Opening first argument as json lab datasource
+with open(str(sys.argv[1])) as data_file:    
+    data = json.load(data_file)
+
+# Making device list based on the lab file
+devices = []
+for each in data['devices']:
+    devices.append(each['name'])
+
+print providers
+print kv_header
+for device in devices:
+    print kv_key_header
+    print "        path = \"cables/%s\"" % device
+    value = []
+    for cable in data['cables']:
+        if cable['ahost'] == device:
+            value.append({'bridge':cable['abridge'],'remote':cable['bhost']})
+        if cable['bhost'] == device:
+            value.append({'bridge':cable['bbridge'],'remote':cable['ahost']})
+    value = json.dumps(value)
+    print "        value = \"%s\"" % value.replace('"', r'\"')
+    print kv_key_footer
+print kv_footer
+
+for each in data['devices']:
+    print "resource \"docker_container\" \"%s\" {" % each['name']
+    print "  name = \"%s\"" % each['name']
+    print "  hostname = \"%s\"" % each['name']
+    print "  image = \"%s\"" % each['image']
+    print "  networks = [\"vpipes\"]"
+    print "  privileged = true"
+    print "}"
+
+    

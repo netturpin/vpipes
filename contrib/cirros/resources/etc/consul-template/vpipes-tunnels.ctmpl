@@ -1,0 +1,40 @@
+#!/bin/bash
+set -x
+
+
+function build_tunnel {
+  ## Building tunnels to remote IP : $1
+  ## From local bridge $2
+  ## With local IP $3
+
+# Setting LOCAL and REMOTE IP address 4th BYTE in a variable
+REMOTE_4B=$(echo $1 | cut -d'.' -f4)
+LOCAL_4B=$(echo $3 | cut -d'.' -f4)
+
+  ip l2tp add tunnel \
+   tunnel_id ${LOCAL_4B}${REMOTE_4B} \
+    peer_tunnel_id ${REMOTE_4B}${LOCAL_4B} \
+    encap udp \
+    local $3 \
+    remote $1 \
+    udp_sport 50${LOCAL_4B}${REMOTE_4B} \
+    udp_dport 50${REMOTE_4B}${LOCAL_4B}
+
+  ip l2tp add session \
+    name l2tp-${LOCAL_4B}${REMOTE_4B} \
+    tunnel_id ${LOCAL_4B}${REMOTE_4B} \
+    session_id ${LOCAL_4B}${REMOTE_4B} \
+    peer_session_id ${REMOTE_4B}${LOCAL_4B}
+
+  # Make the session device (l2tp ethernet) up and connect it to the datapath bridge
+  ip link set dev l2tp-${LOCAL_4B}${REMOTE_4B} up
+  ip link set dev l2tp-${LOCAL_4B}${REMOTE_4B} master $2
+}
+
+{{ $hostname := plugin "hostname"}}
+{{ range tree ($hostname | printf "cables/%s") }}
+build_tunnel \
+  {{ with node .Value }}{{ .Node.Address }}{{ end }} \
+  {{ .Key }} \
+  {{ with node ($hostname | printf "%s") }}{{ .Node.Address }}{{ end }}
+{{ end }}

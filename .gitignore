@@ -1,0 +1,4 @@
+tf/
+*.img
+*.img.gz
+*.qcow2

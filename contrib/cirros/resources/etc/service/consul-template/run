@@ -1,0 +1,4 @@
+#!/bin/bash
+
+consul-template \
+  -config=/etc/consul-template/consul-template.conf

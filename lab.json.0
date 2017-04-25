@@ -1,0 +1,47 @@
+{
+  "devices": [
+      {
+        "name": "spine_1",
+        "image": "bsdrp:1.902"
+      }, 
+      {
+        "name": "spine_2",
+        "image": "bsdrp:1.902"
+      },
+      {
+        "name": "leaf_1",
+        "image": "bsdrp:1.902"
+      },
+      {
+        "name": "leaf_2",
+        "image": "bsdrp:1.902"
+      },
+      {
+        "name": "leaf_3",
+        "image": "bsdrp:1.902"
+      },
+      {
+        "name": "host_1",
+        "image": "cirros:0.3.5"
+      },
+      {
+        "name": "host_2",
+        "image": "cirros:0.3.5"
+      },
+      {
+        "name": "host_3",
+        "image": "cirros:0.3.5"
+      }
+  ],
+  "cables": [
+    { "ahost": "spine_1", "abridge": "dp-0", "adev": "eth1", "bhost": "leaf_1", "bbridge": "dp-0", "bdev": "eth1" }, 
+    { "ahost": "spine_1", "abridge": "dp-1", "adev": "eth2", "bhost": "leaf_2", "bbridge": "dp-0", "bdev": "eth1" }, 
+    { "ahost": "spine_1", "abridge": "dp-2", "adev": "eth3", "bhost": "leaf_3", "bbridge": "dp-0", "bdev": "eth1" },
+    { "ahost": "spine_2", "abridge": "dp-0", "adev": "eth1", "bhost": "leaf_1", "bbridge": "dp-1", "bdev": "eth2" },
+    { "ahost": "spine_2", "abridge": "dp-1", "adev": "eth2", "bhost": "leaf_2", "bbridge": "dp-1", "bdev": "eth2" },
+    { "ahost": "spine_2", "abridge": "dp-2", "adev": "eth3", "bhost": "leaf_3", "bbridge": "dp-1", "bdev": "eth2" },
+    { "ahost": "host_1", "abridge": "dp-0", "adev": "eth0", "bhost": "leaf_1", "bbridge": "dp-2", "bdev": "em2" },
+    { "ahost": "host_2", "abridge": "dp-0", "adev": "eth0", "bhost": "leaf_2", "bbridge": "dp-2", "bdev": "em2" },
+    { "ahost": "host_3", "abridge": "dp-0", "adev": "eth0", "bhost": "leaf_3", "bbridge": "dp-2", "bdev": "em2" }
+ ]
+}

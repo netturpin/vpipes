@@ -1,0 +1,21 @@
+#!/bin/sh
+# system one time tasks
+
+bridge_create () {
+  if ip link add $1 type bridge
+  then
+    echo "Bridge $1 created"
+  else
+    echo "Bridge $1 already exists or iproute2 not installed or not running --privileged"
+    return 0
+  fi
+
+ip link set dev $1 up
+}
+
+BRIDGES=$(awk '{print $2}' /etc/qemu/bridge.conf)
+
+for i in $BRIDGES
+do
+  bridge_create $i
+done

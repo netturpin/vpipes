@@ -1,0 +1,48 @@
+#!/bin/bash
+
+function new_mac() {
+  echo "52:54:00:$(dd if=/dev/urandom bs=512 count=1 2>/dev/null | md5sum | sed 's/^\(..\)\(..\)\(..\).*$/\1:\2:\3/')"
+}
+
+exec /usr/bin/kvm \
+  -cpu host \
+  -nographic \
+  -serial mon:telnet::23,server,nowait \
+  -name $(hostname) \
+  -machine pc-i440fx-trusty,accel=kvm,usb=off \
+  -m 512M \
+  -realtime mlock=off \
+  -smp 1,sockets=1,cores=1,threads=1 \
+  -smbios type=0,vendor=Wistar \
+  -smbios type=1,manufacturer=Wistar,product=Wistar-vqfx1-VM,version=2.0 \
+  -no-user-config \
+  -nodefaults \
+  -rtc base=utc \
+  -boot strict=on \
+  -drive file=/var/lib/qcow2/bsdrp.img \
+  -device piix3-usb-uhci,id=usb,bus=pci.0,addr=0x1.0x2 \
+  -msg timestamp=on \
+  -netdev bridge,id=br-em0,br=br-em0 \
+  -device e1000,netdev=br-em0,mac=$(new_mac),bus=pci.0,addr=0x3 \
+  -netdev bridge,id=br-em1,br=br-em1 \
+  -device e1000,netdev=br-em1,mac=$(new_mac),bus=pci.0,addr=0x4 \
+  -netdev bridge,id=br-em2,br=br-em2 \
+  -device e1000,netdev=br-em2,mac=$(new_mac),bus=pci.0,addr=0x5 \
+  -netdev bridge,id=br-em3,br=br-em3 \
+  -device e1000,netdev=br-em3,mac=$(new_mac),bus=pci.0,addr=0x6 \
+  -netdev bridge,id=br-em4,br=br-em4 \
+  -device e1000,netdev=br-em4,mac=$(new_mac),bus=pci.0,addr=0x7 \
+  -netdev bridge,id=br-em5,br=br-em5 \
+  -device e1000,netdev=br-em5,mac=$(new_mac),bus=pci.0,addr=0x8 \
+  -netdev bridge,id=br-em6,br=br-em6 \
+  -device e1000,netdev=br-em6,mac=$(new_mac),bus=pci.0,addr=0x9 \
+  -netdev bridge,id=br-em7,br=br-em7 \
+  -device e1000,netdev=br-em7,mac=$(new_mac),bus=pci.0,addr=0x10 \
+  -netdev bridge,id=br-em8,br=br-em8 \
+  -device e1000,netdev=br-em8,mac=$(new_mac),bus=pci.0,addr=0x11 \
+  -netdev bridge,id=br-em9,br=br-em9 \
+  -device e1000,netdev=br-em9,mac=$(new_mac),bus=pci.0,addr=0x12 \
+  -netdev bridge,id=br-em10,br=br-em10 \
+  -device e1000,netdev=br-em10,mac=$(new_mac),bus=pci.0,addr=0x13 \
+  -netdev bridge,id=br-em11,br=br-em11 \
+  -device e1000,netdev=br-em11,mac=$(new_mac),bus=pci.0,addr=0x14

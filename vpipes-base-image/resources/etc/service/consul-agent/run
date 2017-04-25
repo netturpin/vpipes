@@ -1,0 +1,8 @@
+#!/bin/bash
+
+consul agent \
+  -data-dir /var/lib/consul \
+  -join consul \
+  -config-file /etc/consul-agent/consul-agent.json \
+  -node $(hostname) \
+  -datacenter vpipes

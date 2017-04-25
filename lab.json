@@ -1,0 +1,21 @@
+{
+  "devices": [
+      {
+        "name": "host_1",
+        "image": "cirros:0.3.5"
+      },
+      {
+        "name": "host_2",
+        "image": "cirros:0.3.5"
+      },
+      {
+        "name": "router",
+        "image": "bsdrp:1.902"
+      }
+  ],
+  "cables": [
+    { "tun-id": "1", "ahost": "host_1", "abridge": "br-eth0", "bhost": "router", "bbridge": "br-em0" },
+    { "tun-id": "2", "ahost": "host_1", "abridge": "br-eth1", "bhost": "router", "bbridge": "br-em1" },
+    { "tun-id": "3", "ahost": "host_2", "abridge": "br-eth0", "bhost": "router", "bbridge": "br-em2" }
+ ]
+}
